@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Temperature, Humidity, and Distance Reading</title>
+    <style type="text/css">
+        body {
+            font-family: Trebuchet MS, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #ddd;
+            background-image: url('gray.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .data_head {
+            margin: auto;
+            width: 45%;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #959896;
+            color: black;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+        }
+
+        .data_container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 45%;
+            margin: 0 auto;
+            padding: 10px; 
+        }
+
+        .data_item {
+            text-align: center;
+            flex: 1;
+            margin: 10px;
+            padding: 10px; 
+            background-color: #959896;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .data_item h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: black;
+        }
+
+        .data_item p {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="data_head">Realtime Temperature and Humidity</div>
+
+<div class="data_container">
+    <div class="data_item">
+        <img src="temp.png" alt="Temperature" style="width: 100px;">
+        <h2>Temperature</h2>
+        <p class="value" id="temperature">15 &#8451;</p>
+    </div>
+    <div class="data_item">
+        <img src="humid.png" alt="Humidity" style="width: 100px;">
+        <h2>Humidity</h2>
+        <p class="value" id="humidity">10%</p>
+    </div>
+</div>
+
+<div class="data_head">Ultra-Sonic Sensor</div>
+<div class="data_container">
+    <div class="data_item">
+        <h2>Distance</h2>
+        <p class="value" id="distance">0 cm</p>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCSCdG4OGi3TlymEe93avczTzkv3I8tFqs",
+        authDomain: "group7midact1.firebaseapp.com",
+        databaseURL: "https://group7midact1-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "group7midact1",
+        storageBucket: "group7midact1.appspot.com",
+        messagingSenderId: "30466742602",
+        appId: "1:30466742602:web:81059676dff45bada1c9b3"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Getting reference to the database
+    const database = firebase.database();
+
+    // Getting reference to the distance data
+    const distanceRef = database.ref('Ultrasonic_Sensor/Distance');
+
+    // Fetching the distance data
+    distanceRef.on('value', function(snapshot) {
+        const distance = snapshot.val();
+        document.getElementById('distance').innerHTML = distance + " cm";
+    });
+
+    // Getting references to the temperature and humidity data
+    const temperatureRef = database.ref('DHT_11/Temperature');
+    const humidityRef = database.ref('DHT_11/Humidity');
+
+    // Fetching the temperature data
+    temperatureRef.on('value', function(snapshot) {
+        const temperature = snapshot.val();
+        document.getElementById('temperature').innerHTML = temperature + " &#8451;";
+    });
+
+    // Fetching the humidity data
+    humidityRef.on('value', function(snapshot) {
+        const humidity = snapshot.val();
+        document.getElementById('humidity').innerHTML = humidity + "%";
+    });
+</script>
+</body>
+</html>
